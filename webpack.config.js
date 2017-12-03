@@ -3,15 +3,24 @@ var path = require('path');
 
 module.exports = {
 	entry: {
-		main: './src/client/js/client.js'
+		main: './src/client/js/client.ts'
 	},
 	devtool: 'eval-source-map',
 	output: {
 		path: path.resolve('./dist/client/js'),
 		filename: 'client.js'
 	},
+	resolve: {
+		extensions: ['.js', '.ts']
+	},
 	module: {
 		rules: [
+			{
+				test: /\.ts$/,
+				use: [
+					'ts-loader'
+				]
+			},
 			{
 				test: /\.css$/,
 				use: [

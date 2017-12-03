@@ -1,6 +1,7 @@
-
+import * as $ from 'jquery';
 import '../css/main.scss';
-import Network from './network';
+
+import {Network} from './network';
 import {my} from './etc';
 
 const network = new Network(location.origin);
@@ -8,7 +9,7 @@ const network = new Network(location.origin);
 $(function() {
   // 게임참여 버튼을 눌렀을 때, 2장을 서버에서 받아서 표시한다.
   $('.js-btn-join').on('click', (e) => {
-    const nickname = $('#nickname').val();
+    const nickname : string = <string>$('#nickname').val();
     if(!nickname) {
       alert('닉네임을 입력하세요.');
       return;
