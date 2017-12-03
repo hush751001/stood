@@ -5,34 +5,58 @@ module.exports = {
 	entry: {
 		main: './src/client/js/client.js'
 	},
+	devtool: 'eval-source-map',
 	output: {
 		path: path.resolve('./dist/client/js'),
 		filename: 'client.js'
 	},
 	module: {
-		loaders: [		
+		rules: [
 			{
-				loader: 'babel-loader'
+				test: /\.css$/,
+				use: [
+					'style-loader',
+					'css-loader'
+				]
 			},
 			{
 				test: /\.scss$/,
-				loaders: ['style', 'css', 'sass'],
+				use: [{
+						loader: "style-loader"
+				}, {
+						loader: "css-loader", options: {
+								sourceMap: true
+						}
+				}, {
+						loader: "sass-loader", options: {
+								sourceMap: true
+						}
+				}]
+
 			},
 			{
-				test: /\.(gif|png|jpe?g|svg)$/i,
-				loaders: [
-					'file-loader?hash=sha512&digest=hex&name=../images/[hash].[ext]',
-					'image-webpack-loader'
+				test: /\.(png|svg|jpg|gif)$/,
+				use: [
+          {
+            loader: 'file-loader',
+            options: {
+							publicPath: 'js/'
+						}  
+          }
+        ]
+			},
+			{
+				test: /\.(woff|woff2|eot|ttf|otf)$/,
+				use: [
+					'file-loader'
 				]
 			}
 		]
 	},
-	devtool: 'source-map',
 	plugins: [
 		new webpack.ProvidePlugin({
-      $: "jquery",
-      jQuery: "jquery"
-    }),
-		new webpack.optimize.UglifyJsPlugin()
+			$: 'jquery',
+			jQuery: 'jquery'
+		})
 	]	
 };
