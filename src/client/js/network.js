@@ -1,74 +1,10 @@
-let my = {
-  nickname: '',
-  id: ''
-}
+import io from 'socket.io-client';
+import {makeCardsHtml, my} from './etc';
 
-$(function() {
-  // 게임참여 버튼을 눌렀을 때, 2장을 서버에서 받아서 표시한다.
-  $('.js-btn-join').on('click', (e) => {
-    const nickname = $('#nickname').val();
-    if(!nickname) {
-      alert('닉네임을 입력하세요.');
-      return;
-    }
-    network.join(nickname);
-    my.nickname = nickname;
-
-    $('#nickname').parent().hide();
-    $('.js-btn-join').hide();
-    $('.js-btn-call').show();
-    $('.js-btn-onemore').show();
-  });
-
-  // 결정을 한다. 
-  $('.js-btn-call').on('click', (e) => {
-    network.call();
-
-    $('.js-btn-call').prop('disabled', true);
-    $('.js-btn-onemore').prop('disabled', true);
-  });
-
-  $('.js-btn-onemore').on('click', (e) => {
-    network.onemore();
-
-    $('.js-btn-onemore').hide();
-  });
-
-  $('.js-btn-reset').on('click', (e) => {
-    location.reload();
-  });
-});
-
-function makeCardsHtml(cards) {
-  let strHtml = '';
-  strHtml += '<li class="card card-' + cards[0].cardPictureIndex + '"></ll>';
-  strHtml += '<li class="card card-' + cards[1].cardPictureIndex + '"></ll>';
-  return strHtml;
-}
-
-//################### Network
-
-(function() {
-  let socket;
-
-  window.network = {};
-
-  function join(nickname) {
-    socket.emit('join', nickname);
-  }
-
-  function call() {
-    socket.emit('call');
-  }
-
-  function onemore() {
-    socket.emit('onemore');
-  }
-
-  function init(url) {
-    // socket서버에 접속
-    socket = io.connect(url);
-
+export default class Network {
+  constructor(url) {
+    let socket = io.connect(url);
+  
     // 접속이 되었을 때 받는 event 등록
     socket.on('connect', (data) => {
       console.log('connected');
@@ -132,13 +68,19 @@ function makeCardsHtml(cards) {
         alert('졌다.');
       }
     });
+
+    this.socket = socket;
   }
 
-  window.network.join = join;
-  window.network.init = init;
-  window.network.call = call;
-  window.network.onemore = onemore;
-})();
+  join(nickname) {
+    this.socket.emit('join', nickname);
+  }
 
+  call() {
+    this.socket.emit('call');
+  }
 
-network.init(location.origin);
+  onemore() {
+    this.socket.emit('onemore');
+  }
+}

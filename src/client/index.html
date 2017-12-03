@@ -1,0 +1,39 @@
+<!doctype html>
+<html class="no-js" lang="">
+  <head>
+    <meta charset="utf-8">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>networkGame</title>
+  </head>
+  <body>
+    <div class="container">
+        <h2>socket.io를 이용한 섯다</h2>
+      <ul class="card-list my-card-list">
+      </ul>
+      <h3 class="my-title"></h3>
+      <div>
+        <label>닉네임 : <input type="text" id="nickname" /></label>
+        <button class="btn btn-primary js-btn-join">게임 참여</button>
+        <button class="btn btn-primary js-btn-call" disabled style="display:none;">결정</button>
+        <button class="btn btn-primary js-btn-onemore" style="display:none;">한번만 바꾸기</button>
+        <button class="btn btn-primary js-btn-reset" style="display:none;">다시</button>
+      </div>
+      <section id="called-people-wrap" style="display:none;">
+        <h2>결정한 사람</h2>
+        <ul id="called-people">
+        </ul>
+      </section>
+
+      <section id="winner-wrap" style="display:none;">
+        <h2>우승자 : <span id="winner-name"></span></h2>
+        <h3 id="winner-title"></h3>
+        <ul class="card-list winner-card-list">
+        </ul>
+      </section>
+    </div>
+
+    <script src="js/client.js"></script>
+    <!-- endbuild -->
+  </body>
+</html>

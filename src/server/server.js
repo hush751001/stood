@@ -1,22 +1,26 @@
-const express = require('express');
+'use strict'
+
+import express from 'express';
+import http from 'http';
+import SocketIO from 'socket.io';
+import compression from 'compression';
+import cardManager from './cardManager';
+
 const app = express();
-const server = require('http').createServer(app);
-const io = require('socket.io')(server);
+const server = http.createServer(app);
+const io = new SocketIO(server);
+const port = process.env.PORT || 3000;
 
-const cardManager = require('./cardManager');
+app.use(compression({}));
+app.use(express.static(__dirname + '/../client'));
 
-app.use(express.static(__dirname + '/node_modules'));
-app.use(express.static(__dirname + '/.tmp'));
-app.use(express.static(__dirname + '/app'));
 
-app.use('/bower_components', express.static(__dirname + '/bower_components'));
-
-server.listen(3000);
+// #########################################
 
 let numUsers = 0;
-cardManager.init();
-
 let users = {};
+
+cardManager.init();
 
 io.on('connection', (socket) => {
   numUsers++;
@@ -25,7 +29,7 @@ io.on('connection', (socket) => {
 
   socket.emit('set id', socket.id);
 
-  // 결정(콜)
+  // 결정
   socket.on('call', () => {
     // 결정함.
     socket.called = true;
@@ -76,7 +80,7 @@ io.on('connection', (socket) => {
         });
 
         let usernames = [];
-        sockets.forEach((client) => {
+        sockets.forEach((client)=>{
           usernames.push(client.username);
         });
 
@@ -118,4 +122,8 @@ io.on('connection', (socket) => {
     console.log('numUsers : ', numUsers);
     console.log('id : ', socket.id);
   });
+});
+
+server.listen(port, () => {
+  console.log('[INFO] Listening on *:' + port);
 });
